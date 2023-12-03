@@ -15,14 +15,34 @@ struct Outcome {
   var r = 0
   var g = 0
   var b = 0
+
+  init(rawValue: String) throws {
+    for component in rawValue.components(separatedBy: ", ") {
+      let scanner = Scanner(string: component)
+
+      guard let count = scanner.scanInt()
+      else { throw ParseError.missingCubesCount }
+
+      _ = scanner.scanString(" ")
+
+      switch scanner.scanCharacters(from: .alphanumerics) {
+      case "red": r = count
+      case "green": g = count
+      case "blue": b = count
+      default: throw ParseError.unknownColor
+      }
+    }
+  }
+
+  var isPossible: Bool {
+    r <= 12 && g <= 13 && b <= 14
+  }
 }
 
 struct Game {
   var id: Int
   var outcomes: [Outcome]
-}
 
-extension Game {
   static let outcomesCharacterSet =
     CharacterSet(charactersIn: " ,;")
       .union(.alphanumerics)
@@ -43,41 +63,11 @@ extension Game {
     outcomes = try rawOutcomes.components(separatedBy: "; ")
       .map(Outcome.init)
   }
-}
 
-extension Outcome {
-  init(rawValue: String) throws {
-    for component in rawValue.components(separatedBy: ", ") {
-      let scanner = Scanner(string: component)
-
-      guard let count = scanner.scanInt()
-      else { throw ParseError.missingCubesCount }
-
-      _ = scanner.scanString(" ")
-
-      switch scanner.scanCharacters(from: .alphanumerics) {
-      case "red": r = count
-      case "green": g = count
-      case "blue": b = count
-      default: throw ParseError.unknownColor
-      }
-    }
-  }
-}
-
-extension Game {
   var isPossible: Bool {
     outcomes.allSatisfy(\.isPossible)
   }
-}
 
-extension Outcome {
-  var isPossible: Bool {
-    r <= 12 && g <= 13 && b <= 14
-  }
-}
-
-extension Game {
   var power: Int {
     var maxR = 0
     var maxG = 0

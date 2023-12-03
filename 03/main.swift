@@ -6,15 +6,23 @@ enum UnexpectedError: Error {
   case invalidNumberLocation
 }
 
+extension CharacterSet {
+  static let dot = CharacterSet(charactersIn: ".")
+}
+
+extension BinaryInteger {
+  var numberOfDigits: Int {
+    self == 0 ? 1 : Int(log10(Double(self)))+1
+  }
+}
+
 struct Location: Hashable {
   let x, y: Int
   init(_ x: Int, _ y: Int) {
     self.x = x
     self.y = y
   }
-}
 
-extension Location {
   func adjacentLocations(forValueOfLength length: Int) -> [Location] {
     let adjacencyRange = x-1 ... x+length
     var adjacentLocations: [Location] = []
@@ -23,16 +31,6 @@ extension Location {
     adjacentLocations += [.init(adjacencyRange.lowerBound, y)]
     adjacentLocations += [.init(adjacencyRange.upperBound, y)]
     return adjacentLocations
-  }
-}
-
-extension CharacterSet {
-  static let dot = CharacterSet(charactersIn: ".")
-}
-
-extension BinaryInteger {
-  var numberOfDigits: Int {
-    self == 0 ? 1 : Int(log10(Double(self)))+1
   }
 }
 
@@ -64,9 +62,7 @@ struct Engine {
       }
     }
   }
-}
 
-extension Engine {
   func partNumbersSum() -> Int {
     var sum = 0
     for (location, number) in numberLocations {
@@ -82,9 +78,7 @@ extension Engine {
     }
     return sum
   }
-}
 
-extension Engine {
   func gearRatiosSum() throws -> Int {
     var groups: [Location: Set<Location>] = [:]
     for (numberLocation, number) in numberLocations {
