@@ -4,7 +4,7 @@ enum UnexpectedError: Error {
   case inputNotFound
 }
 
-enum ParseError: Error {
+enum ParsingError: Error {
   case missingGameID
   case missingOutcomes
   case missingCubesCount
@@ -21,7 +21,7 @@ struct Outcome {
       let scanner = Scanner(string: component)
 
       guard let count = scanner.scanInt()
-      else { throw ParseError.missingCubesCount }
+      else { throw ParsingError.missingCubesCount }
 
       _ = scanner.scanString(" ")
 
@@ -29,7 +29,7 @@ struct Outcome {
       case "red": r = count
       case "green": g = count
       case "blue": b = count
-      default: throw ParseError.unknownColor
+      default: throw ParsingError.unknownColor
       }
     }
   }
@@ -52,13 +52,13 @@ struct Game {
     _ = scanner.scanString("Game ")
 
     guard let id = scanner.scanInt()
-    else { throw ParseError.missingGameID }
+    else { throw ParsingError.missingGameID }
     self.id = id
 
     _ = scanner.scanString(": ")
 
     guard let rawOutcomes = scanner.scanCharacters(from: Self.outcomesCharacterSet)
-    else { throw ParseError.missingOutcomes }
+    else { throw ParsingError.missingOutcomes }
 
     outcomes = try rawOutcomes.components(separatedBy: "; ")
       .map(Outcome.init)
