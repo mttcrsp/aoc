@@ -18,11 +18,11 @@ func endIndexForMarker(ofLength length: Int, in string: String) throws -> Int {
 }
 
 func part1() throws -> Int {
-  let string = try String(contentsOfFile: "input/1.txt")
+  let string = try String(contentsOfFile: "input.txt")
   return try endIndexForMarker(ofLength: 4, in: string)
 }
 
 func part2() throws -> Int {
-  let string = try String(contentsOfFile: "input/2.txt")
+  let string = try String(contentsOfFile: "input.txt")
   return try endIndexForMarker(ofLength: 14, in: string)
 }

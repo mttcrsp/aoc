@@ -17,7 +17,7 @@ extension Character {
 }
 
 func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input/1.txt")
+  guard let file = FileHandle(forReadingAtPath: "input.txt")
   else { throw UnexpectedError.inputNotFound }
 
   var prioritiesSum = 0
@@ -34,7 +34,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input/2.txt")
+  guard let file = FileHandle(forReadingAtPath: "input.txt")
   else { throw UnexpectedError.inputNotFound }
 
   var groups: [Int: Set<Character>] = [:]

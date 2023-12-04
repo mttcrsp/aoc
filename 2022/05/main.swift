@@ -121,7 +121,7 @@ struct Configuration {
 }
 
 func part1() throws -> String {
-  let string = try String(contentsOfFile: "input/1.txt")
+  let string = try String(contentsOfFile: "input.txt")
   let config = try Configuration(rawValue: string)
   var ship = Ship(levels: config.levels)
   for move in config.moves {
@@ -131,7 +131,7 @@ func part1() throws -> String {
 }
 
 func part2() throws -> String {
-  let string = try String(contentsOfFile: "input/2.txt")
+  let string = try String(contentsOfFile: "input.txt")
   let config = try Configuration(rawValue: string)
   var ship = Ship(levels: config.levels)
   for move in config.moves {
