@@ -57,3 +57,6 @@ func part1() async throws -> Int {
 func part2() async throws -> Int {
   try await prediction(of: .prev)
 }
+
+try await print(part1())
+try await print(part2())

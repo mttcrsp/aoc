@@ -103,3 +103,6 @@ func part2() async throws -> Int {
   let race = Race(time: time, distance: distance)
   return race.sufficientHoldingTimesCount()
 }
+
+try await print(part1())
+try await print(part2())

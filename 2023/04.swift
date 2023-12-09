@@ -73,3 +73,6 @@ func part2() async throws -> Int {
 
   return counts.reduce(0, +)
 }
+
+try await print(part1())
+try await print(part2())

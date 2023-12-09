@@ -75,3 +75,6 @@ func part2() async throws -> Int {
 
   return count
 }
+
+try await print(part1())
+try await print(part2())

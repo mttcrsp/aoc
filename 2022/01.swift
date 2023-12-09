@@ -46,3 +46,6 @@ func part2() throws -> Int {
   }
   return top3CaloriesElves.reduce(0, +)
 }
+
+try await print(part1())
+try await print(part2())

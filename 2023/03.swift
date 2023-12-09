@@ -121,3 +121,6 @@ func part2() async throws -> Int {
   let engine = try await Engine(file: file)
   return try engine.gearRatiosSum()
 }
+
+try await print(part1())
+try await print(part2())

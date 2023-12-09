@@ -87,3 +87,6 @@ func part2() async throws -> Int {
     .map { location in try input.steps(from: location, to: { location in location.hasSuffix("Z") }) }
     .reduce(1, lcm)
 }
+
+try await print(part1())
+try await print(part2())

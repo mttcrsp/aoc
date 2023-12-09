@@ -139,3 +139,6 @@ func part2() throws -> String {
   }
   return String(ship.topCrates)
 }
+
+try await print(part1())
+try await print(part2())

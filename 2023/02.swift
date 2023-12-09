@@ -108,3 +108,6 @@ func part2() async throws -> Int {
 
   return gamesPowerSum
 }
+
+try await print(part1())
+try await print(part2())

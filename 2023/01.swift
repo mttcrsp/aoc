@@ -66,5 +66,5 @@ func part2() async throws -> Int {
   return calibrationValue
 }
 
-try print(await part1())
-try print(await part2())
+try await print(part1())
+try await print(part2())

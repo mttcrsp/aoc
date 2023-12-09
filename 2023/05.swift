@@ -126,3 +126,6 @@ func part2() throws -> Int {
   }
   return converter.convert(seedRanges).map(\.lowerBound).min() ?? .max
 }
+
+try await print(part1())
+try await print(part2())

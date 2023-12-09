@@ -170,3 +170,6 @@ func part2() async throws -> Int {
 
   return totalScore
 }
+
+try await print(part1())
+try await print(part2())
