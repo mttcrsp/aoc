@@ -146,7 +146,7 @@ struct Game2 {
 }
 
 func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "02.in")
   else { throw UnexpectedError.inputNotFound }
 
   var totalScore = 0
@@ -159,7 +159,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "02.in")
   else { throw UnexpectedError.inputNotFound }
 
   var totalScore = 0

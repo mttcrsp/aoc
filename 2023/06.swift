@@ -47,7 +47,7 @@ struct Race {
 }
 
 func part1() async throws -> Int {
-  guard let fileHandle = FileHandle(forReadingAtPath: "input.txt")
+  guard let fileHandle = FileHandle(forReadingAtPath: "06.in")
   else { throw UnexpectedError.inputNotFound }
 
   var times: [Int] = []
@@ -77,7 +77,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let fileHandle = FileHandle(forReadingAtPath: "input.txt")
+  guard let fileHandle = FileHandle(forReadingAtPath: "06.in")
   else { throw UnexpectedError.inputNotFound }
 
   var rawTime = ""

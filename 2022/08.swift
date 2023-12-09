@@ -34,7 +34,7 @@ struct Forest {
   var treesCount: Int { rows*cols }
 
   init() async throws {
-    guard let file = FileHandle(forReadingAtPath: "input.txt")
+    guard let file = FileHandle(forReadingAtPath: "08.in")
     else { throw UnexpectedError.inputNotFound }
 
     heights = []

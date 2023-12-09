@@ -159,7 +159,7 @@ struct Entry {
 }
 
 func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "07.in")
   else { throw UnexpectedError.inputNotFound }
 
   var entries: [Entry] = []
@@ -180,7 +180,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "07.in")
   else { throw UnexpectedError.inputNotFound }
 
   var entries: [Entry] = []
@@ -200,6 +200,3 @@ func part2() async throws -> Int {
 
   return result
 }
-
-try print(await part1())
-try print(await part2())

@@ -6,7 +6,7 @@ enum UnexpectedError: Error {
 }
 
 func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "01.in")
   else { throw UnexpectedError.inputNotFound }
 
   var calibrationValue = 0
@@ -26,7 +26,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "01.in")
   else { throw UnexpectedError.inputNotFound }
 
   let mapping: [String: Int] = [
@@ -65,3 +65,6 @@ func part2() async throws -> Int {
 
   return calibrationValue
 }
+
+try print(await part1())
+try print(await part2())

@@ -107,7 +107,7 @@ struct Engine {
 }
 
 func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "03.in")
   else { throw UnexpectedError.inputNotFound }
 
   let engine = try await Engine(file: file)
@@ -115,7 +115,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "03.in")
   else { throw UnexpectedError.inputNotFound }
 
   let engine = try await Engine(file: file)

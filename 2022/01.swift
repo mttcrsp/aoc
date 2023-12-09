@@ -5,7 +5,7 @@ enum UnexpectedError: Error {
 }
 
 func part1() throws -> Int {
-  let url = URL(fileURLWithPath: "input.txt")
+  let url = URL(fileURLWithPath: "01.in")
   let string = try String(contentsOf: url)
   let lines = string.components(separatedBy: "\n")
 
@@ -26,7 +26,7 @@ func part1() throws -> Int {
 }
 
 func part2() throws -> Int {
-  let url = URL(fileURLWithPath: "input.txt")
+  let url = URL(fileURLWithPath: "01.in")
   let string = try String(contentsOf: url)
   let lines = string.components(separatedBy: "\n")
 

@@ -10,7 +10,7 @@ enum PredictionType {
 }
 
 func prediction(of mode: PredictionType) async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "09.in")
   else { throw UnexpectedError.inputNotFound }
 
   var prevResult = 0

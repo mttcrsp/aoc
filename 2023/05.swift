@@ -109,7 +109,7 @@ struct CompositeConverter {
 }
 
 func part1() throws -> Int {
-  let string = try String(contentsOfFile: "input.txt")
+  let string = try String(contentsOfFile: "05.in")
   let blocks = string.components(separatedBy: "\n\n")
   let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
   let converter = try CompositeConverter(blocks: Array(blocks[1...]))
@@ -117,7 +117,7 @@ func part1() throws -> Int {
 }
 
 func part2() throws -> Int {
-  let string = try String(contentsOfFile: "input.txt")
+  let string = try String(contentsOfFile: "05.in")
   let blocks = string.components(separatedBy: "\n\n")
   let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
   let converter = try CompositeConverter(blocks: Array(blocks[1...]))

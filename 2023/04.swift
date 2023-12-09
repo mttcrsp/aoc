@@ -43,7 +43,7 @@ struct Card {
 }
 
 func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "04.in")
   else { throw UnexpectedError.inputNotFound }
 
   var points = 0
@@ -56,7 +56,7 @@ func part1() async throws -> Int {
 }
 
 func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "input.txt")
+  guard let file = FileHandle(forReadingAtPath: "04.in")
   else { throw UnexpectedError.inputNotFound }
 
   var cards: [Card] = []
