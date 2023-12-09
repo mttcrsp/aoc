@@ -1,14 +1,10 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-}
-
 struct Card {
   var cardNumbers: Set<Int>
   var winningNumbers: Set<Int>
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     _ = scanner.scanString("Card")
     _ = scanner.scanInt()
@@ -44,11 +40,11 @@ struct Card {
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "04.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var points = 0
   for try await line in file.bytes.lines {
-    let card = try Card(rawValue: line)
+    let card = Card(rawValue: line)
     points += card.score
   }
 
@@ -57,11 +53,11 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "04.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var cards: [Card] = []
   for try await line in file.bytes.lines {
-    try cards.append(Card(rawValue: line))
+    cards.append(Card(rawValue: line))
   }
 
   var counts = [Int](repeating: 1, count: cards.count)

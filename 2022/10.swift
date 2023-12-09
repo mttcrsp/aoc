@@ -1,29 +1,24 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case malformedAddx
-  case unknownInstruction
-}
-
 guard let file = FileHandle(forReadingAtPath: "10.in")
-else { throw UnexpectedError.inputNotFound }
+else { fatalError("input not found") }
 
 enum Instruction {
   case noop
   case addx(Int)
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
-    switch scanner.scanCharacters(from: .lowercaseLetters) {
+    let command = scanner.scanCharacters(from: .lowercaseLetters)
+    switch command {
     case "noop":
       self = .noop
     case "addx":
       guard let value = scanner.scanInt()
-      else { throw UnexpectedError.malformedAddx }
+      else { fatalError("malformed addx command '\(rawValue)'") }
       self = .addx(value)
     default:
-      throw UnexpectedError.unknownInstruction
+      fatalError("unexpected command '\(command ?? "")'")
     }
   }
 }
@@ -32,7 +27,7 @@ var x = 1
 var cycles: [Int] = []
 
 for try await line in file.bytes.lines {
-  let instruction = try Instruction(rawValue: line)
+  let instruction = Instruction(rawValue: line)
   switch instruction {
   case .noop:
     cycles.append(x)

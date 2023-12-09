@@ -1,33 +1,23 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case missingPlayerMove
-  case missingOpponentMove
-  case missingOutcome
-  case unknownPlayerMove
-  case unknownOpponentMove
-  case unknownOutcome
-}
-
 enum Move {
   case rock, paper, scissors
 
-  init(opponentRawValue: Character) throws {
+  init(opponentRawValue: Character) {
     switch opponentRawValue {
     case "A": self = .rock
     case "B": self = .paper
     case "C": self = .scissors
-    default: throw UnexpectedError.unknownOpponentMove
+    default: fatalError("unknown opponent move '\(opponentRawValue)'")
     }
   }
 
-  init(rawValue: Character) throws {
-    switch rawValue {
+  init(playerRawValue: Character) {
+    switch playerRawValue {
     case "X": self = .rock
     case "Y": self = .paper
     case "Z": self = .scissors
-    default: throw UnexpectedError.unknownPlayerMove
+    default: fatalError("unknown player move '\(playerRawValue)'")
     }
   }
 
@@ -77,12 +67,12 @@ enum Outcome {
     }
   }
 
-  init(rawValue: Character) throws {
+  init(rawValue: Character) {
     switch rawValue {
     case "X": self = .loss
     case "Y": self = .draw
     case "Z": self = .win
-    default: throw UnexpectedError.unknownOutcome
+    default: fatalError("unknown outcome type '\(rawValue)'")
     }
   }
 }
@@ -91,18 +81,18 @@ struct Game1 {
   let opponentMove: Move
   let playerMove: Move
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
 
     guard let opponentRawValue = scanner.scanCharacter()
-    else { throw UnexpectedError.missingOpponentMove }
-    opponentMove = try Move(opponentRawValue: opponentRawValue)
+    else { fatalError("missing opponent move in '\(rawValue)'") }
+    opponentMove = Move(opponentRawValue: opponentRawValue)
 
     _ = scanner.scanString(" ")
 
     guard let playerRawValue = scanner.scanCharacter()
-    else { throw UnexpectedError.missingPlayerMove }
-    playerMove = try Move(rawValue: playerRawValue)
+    else { fatalError("missing player move in '\(rawValue)'") }
+    playerMove = Move(playerRawValue: playerRawValue)
   }
 
   var outcome: Outcome {
@@ -118,18 +108,18 @@ struct Game2 {
   let opponentMove: Move
   let outcome: Outcome
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
 
     guard let opponentRawValue = scanner.scanCharacter()
-    else { throw UnexpectedError.missingOpponentMove }
-    opponentMove = try Move(opponentRawValue: opponentRawValue)
+    else { fatalError("opponent move not found in '\(rawValue)'") }
+    opponentMove = Move(opponentRawValue: opponentRawValue)
 
     _ = scanner.scanString(" ")
 
     guard let outcomeRawValue = scanner.scanCharacter()
-    else { throw UnexpectedError.missingOutcome }
-    outcome = try Outcome(rawValue: outcomeRawValue)
+    else { fatalError("outcome not found in '\(rawValue)'") }
+    outcome = Outcome(rawValue: outcomeRawValue)
   }
 
   var playerMove: Move {
@@ -147,11 +137,11 @@ struct Game2 {
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "02.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var totalScore = 0
   for try await line in file.bytes.lines {
-    let game = try Game1(rawValue: line)
+    let game = Game1(rawValue: line)
     totalScore += game.score
   }
 
@@ -160,11 +150,11 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "02.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var totalScore = 0
   for try await line in file.bytes.lines {
-    let game = try Game2(rawValue: line)
+    let game = Game2(rawValue: line)
     totalScore += game.score
   }
 

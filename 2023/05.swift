@@ -1,22 +1,18 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case malformedRange
-}
-
 struct RangeConverter {
   let srcLowerBound: Int
   let dstLowerBound: Int
   let count: Int
 
-  init(line: String) throws {
+  init(line: String) {
     let components = line.components(separatedBy: " ")
     guard
       components.count == 3,
       let dstLowerBound = Int(components[0]),
       let srcLowerBound = Int(components[1]),
       let count = Int(components[2])
-    else { throw UnexpectedError.malformedRange }
+    else { fatalError("malformed range converter definition '\(line)'") }
     self.srcLowerBound = srcLowerBound
     self.dstLowerBound = dstLowerBound
     self.count = count
@@ -31,8 +27,8 @@ struct RangeConverter {
 struct Converter {
   let converters: [RangeConverter]
 
-  init(block: String) throws {
-    converters = try block
+  init(block: String) {
+    converters = block
       .components(separatedBy: "\n")
       .dropFirst()
       .map(RangeConverter.init)
@@ -87,8 +83,8 @@ struct Converter {
 struct CompositeConverter {
   let converters: [Converter]
 
-  init(blocks: [String]) throws {
-    converters = try blocks.map(Converter.init)
+  init(blocks: [String]) {
+    converters = blocks.map(Converter.init)
   }
 
   func convert(_ value: Int) -> Int {
@@ -112,7 +108,7 @@ func part1() throws -> Int {
   let string = try String(contentsOfFile: "05.in")
   let blocks = string.components(separatedBy: "\n\n")
   let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
-  let converter = try CompositeConverter(blocks: Array(blocks[1...]))
+  let converter = CompositeConverter(blocks: Array(blocks[1...]))
   return seeds.map(converter.convert).min() ?? .max
 }
 
@@ -120,12 +116,12 @@ func part2() throws -> Int {
   let string = try String(contentsOfFile: "05.in")
   let blocks = string.components(separatedBy: "\n\n")
   let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
-  let converter = try CompositeConverter(blocks: Array(blocks[1...]))
+  let converter = CompositeConverter(blocks: Array(blocks[1...]))
   let seedRanges = stride(from: 0, to: seeds.count, by: 2).map { i in
     seeds[i] ..< seeds[i]+seeds[i+1]
   }
   return converter.convert(seedRanges).map(\.lowerBound).min() ?? .max
 }
 
-try await print(part1())
-try await print(part2())
+try print(part1())
+try print(part2())

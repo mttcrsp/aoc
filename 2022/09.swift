@@ -1,10 +1,5 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case malformedInstruction
-}
-
 enum Direction: String, CaseIterable {
   case u = "U", d = "D", l = "L", r = "R"
 }
@@ -60,13 +55,13 @@ struct Instruction {
   let direction: Direction
   let amount: Int
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     guard
       let directionRawValue = scanner.scanCharacters(from: .direction),
       let direction = Direction(rawValue: directionRawValue),
       let amount = scanner.scanInt()
-    else { throw UnexpectedError.malformedInstruction }
+    else { fatalError("malformed instruction \(rawValue)") }
     self.direction = direction
     self.amount = amount
   }
@@ -74,13 +69,13 @@ struct Instruction {
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "09.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var headLocation: Point = .zero
   var tailLocation: Point = .zero
   var visitedLocations: Set<Point> = [tailLocation]
   for try await line in file.bytes.lines {
-    let instruction = try Instruction(rawValue: line)
+    let instruction = Instruction(rawValue: line)
     for _ in 0 ..< instruction.amount {
       headLocation = headLocation.moving(in: instruction.direction)
       tailLocation = tailLocation.following(headLocation)
@@ -93,13 +88,13 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "09.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var headLocation: Point = .zero
   var knotsLocations = [Point](repeating: .zero, count: 9)
   var visitedLocations: Set<Point> = [knotsLocations.last!]
   for try await line in file.bytes.lines {
-    let instruction = try Instruction(rawValue: line)
+    let instruction = Instruction(rawValue: line)
     for _ in 0 ..< instruction.amount {
       headLocation = headLocation.moving(in: instruction.direction)
       for (index, knotLocation) in knotsLocations.enumerated() {

@@ -1,11 +1,7 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-}
-
 guard let file = FileHandle(forReadingAtPath: "09.in")
-else { throw UnexpectedError.inputNotFound }
+else { fatalError("input not found") }
 
 var prevResult = 0
 var nextResult = 0

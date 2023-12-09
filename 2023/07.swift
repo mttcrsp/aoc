@@ -1,25 +1,5 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case missingHand
-  case missingBid
-}
-
-let cards = "23456789TJQKA"
-
-var originalValues: [Character: Int] = [:]
-for (index, card) in cards.enumerated() {
-  originalValues[card] = index
-}
-
-var alternateValues: [Character: Int] = [:]
-for (index, card) in "J23456789TQKA".enumerated() {
-  alternateValues[card] = index
-}
-
-let cardCharacterSet = CharacterSet(charactersIn: cards)
-
 enum HandType: Int, Comparable {
   case highCard
   case onePair
@@ -48,7 +28,6 @@ struct Hand {
     }
 
     let sortedOccurences = occurrences.values.sorted(by: >)
-
     switch sortedOccurences {
     case [5]:
       return .fiveOfAKind
@@ -143,12 +122,12 @@ struct Entry {
   var hand: Hand
   var bid: Int
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     guard let hand = scanner.scanCharacters(from: cardCharacterSet)
-    else { throw UnexpectedError.missingHand }
+    else { fatalError("hand definition not found in '\(rawValue)'") }
     guard let bid = scanner.scanInt()
-    else { throw UnexpectedError.missingBid }
+    else { fatalError("bid not found in '\(rawValue)'") }
     self.hand = Hand(rawValue: hand)
     self.bid = bid
   }
@@ -158,13 +137,27 @@ struct Entry {
   }
 }
 
+let cards = "23456789TJQKA"
+
+var originalValues: [Character: Int] = [:]
+for (index, card) in cards.enumerated() {
+  originalValues[card] = index
+}
+
+var alternateValues: [Character: Int] = [:]
+for (index, card) in "J23456789TQKA".enumerated() {
+  alternateValues[card] = index
+}
+
+let cardCharacterSet = CharacterSet(charactersIn: cards)
+
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "07.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var entries: [Entry] = []
   for try await line in file.bytes.lines {
-    let entry = try Entry(rawValue: line)
+    let entry = Entry(rawValue: line)
     entries.append(entry)
   }
 
@@ -181,11 +174,11 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "07.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var entries: [Entry] = []
   for try await line in file.bytes.lines {
-    let entry = try Entry(rawValue: line)
+    let entry = Entry(rawValue: line)
     entries.append(entry)
   }
 

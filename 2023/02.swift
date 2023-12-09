@@ -1,27 +1,16 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-}
-
-enum ParsingError: Error {
-  case missingGameID
-  case missingOutcomes
-  case missingCubesCount
-  case unknownColor
-}
-
 struct Outcome {
   var r = 0
   var g = 0
   var b = 0
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     for component in rawValue.components(separatedBy: ", ") {
       let scanner = Scanner(string: component)
 
       guard let count = scanner.scanInt()
-      else { throw ParsingError.missingCubesCount }
+      else { fatalError("cubes count not found in '\(rawValue)'") }
 
       _ = scanner.scanString(" ")
 
@@ -29,7 +18,7 @@ struct Outcome {
       case "red": r = count
       case "green": g = count
       case "blue": b = count
-      default: throw ParsingError.unknownColor
+      default: fatalError("unknown color '\(rawValue)'")
       }
     }
   }
@@ -47,20 +36,20 @@ struct Game {
     CharacterSet(charactersIn: " ,;")
       .union(.alphanumerics)
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     _ = scanner.scanString("Game ")
 
     guard let id = scanner.scanInt()
-    else { throw ParsingError.missingGameID }
+    else { fatalError("id not found in '\(rawValue)'") }
     self.id = id
 
     _ = scanner.scanString(": ")
 
     guard let rawOutcomes = scanner.scanCharacters(from: Self.outcomesCharacterSet)
-    else { throw ParsingError.missingOutcomes }
+    else { fatalError("outcomes not found in '\(rawValue)'") }
 
-    outcomes = try rawOutcomes.components(separatedBy: "; ")
+    outcomes = rawOutcomes.components(separatedBy: "; ")
       .map(Outcome.init)
   }
 
@@ -83,11 +72,11 @@ struct Game {
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "02.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var possibleGamesIDsSum = 0
   for try await line in file.bytes.lines {
-    let game = try Game(rawValue: line)
+    let game = Game(rawValue: line)
     if game.isPossible {
       possibleGamesIDsSum += game.id
     }
@@ -98,11 +87,11 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "02.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var gamesPowerSum = 0
   for try await line in file.bytes.lines {
-    let game = try Game(rawValue: line)
+    let game = Game(rawValue: line)
     gamesPowerSum += game.power
   }
 

@@ -1,10 +1,5 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case invalidCharacter
-}
-
 enum Direction: CaseIterable {
   case n, s, w, e
 }
@@ -35,14 +30,14 @@ struct Forest {
 
   init() async throws {
     guard let file = FileHandle(forReadingAtPath: "08.in")
-    else { throw UnexpectedError.inputNotFound }
+    else { fatalError("input not found") }
 
     heights = []
     for try await line in file.bytes.lines {
       var row: [Int] = []
       for character in line {
         guard let height = Int(String(character))
-        else { throw UnexpectedError.invalidCharacter }
+        else { fatalError("invalid character in '\(character)'") }
         row.append(height)
       }
       heights.append(row)

@@ -1,18 +1,12 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case malformedLine
-  case malformedRange
-}
-
 extension ClosedRange<Int> {
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let components = rawValue.components(separatedBy: "-")
     guard
       let lowerBound = Int(components[0]),
       let upperBound = Int(components[1])
-    else { throw UnexpectedError.malformedRange }
+    else { fatalError("malformed range definition '\(rawValue)'") }
     self = lowerBound ... upperBound
   }
 
@@ -26,15 +20,15 @@ struct Group {
   let lhs: ClosedRange<Int>
   let rhs: ClosedRange<Int>
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let ranges = rawValue.components(separatedBy: ",")
     guard
       let lhsRawValue = ranges.first,
       let rhsRawValue = ranges.last,
       ranges.count == 2
-    else { throw UnexpectedError.malformedLine }
-    lhs = try .init(rawValue: lhsRawValue)
-    rhs = try .init(rawValue: rhsRawValue)
+    else { fatalError("malformed group definition '\(rawValue)'") }
+    lhs = .init(rawValue: lhsRawValue)
+    rhs = .init(rawValue: rhsRawValue)
   }
 
   var hasFullContainment: Bool {
@@ -48,11 +42,11 @@ struct Group {
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "04.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var count = 0
   for try await line in file.bytes.lines {
-    let group = try Group(rawValue: line)
+    let group = Group(rawValue: line)
     if group.hasFullContainment {
       count += 1
     }
@@ -63,11 +57,11 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "04.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var count = 0
   for try await line in file.bytes.lines {
-    let group = try Group(rawValue: line)
+    let group = Group(rawValue: line)
     if group.hasOverlap {
       count += 1
     }

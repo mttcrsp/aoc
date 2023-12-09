@@ -1,37 +1,27 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case invalidFileComponents
-  case missingMoveCount
-  case missingMoveFrom
-  case missingMoveTo
-  case invalidCranesDefinition
-  case malformedCranesDefinition
-}
-
 struct Move {
   let count: Int
   let from: Int
   let to: Int
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     scanner.charactersToBeSkipped = .whitespacesAndNewlines
 
     _ = scanner.scanString("move")
     guard let count = scanner.scanInt()
-    else { throw UnexpectedError.missingMoveCount }
+    else { fatalError("move count not found in '\(rawValue)'") }
     self.count = count
 
     _ = scanner.scanString("from")
     guard let from = scanner.scanInt()
-    else { throw UnexpectedError.missingMoveFrom }
+    else { fatalError("from component not found in '\(rawValue)'") }
     self.from = from
 
     _ = scanner.scanString("to")
     guard let to = scanner.scanInt()
-    else { throw UnexpectedError.missingMoveTo }
+    else { fatalError("to component not found in '\(rawValue)'") }
     self.to = to
   }
 }
@@ -39,7 +29,7 @@ struct Move {
 struct Level {
   var crates: [Character?]
 
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     crates = []
 
     let scanner = Scanner(string: rawValue)
@@ -55,7 +45,7 @@ struct Level {
 
       _ = scanner.scanString("[")
       guard let crate = scanner.scanCharacter()
-      else { throw UnexpectedError.invalidCranesDefinition }
+      else { fatalError("invalid crates definition '\(rawValue)'") }
       _ = scanner.scanString("]")
       crates.append(crate)
     }
@@ -78,7 +68,7 @@ struct Ship {
     }
   }
 
-  mutating func performCrateMover9000(_ move: Move) throws {
+  mutating func performCrateMover9000(_ move: Move) {
     for _ in 0 ..< move.count {
       let (from, to) = (move.from-1, move.to-1)
       let crate = stacks[from].removeLast()
@@ -86,7 +76,7 @@ struct Ship {
     }
   }
 
-  mutating func performCrateMover9001(_ move: Move) throws {
+  mutating func performCrateMover9001(_ move: Move) {
     let (from, to) = (move.from-1, move.to-1)
     let crates = Array(stacks[from].suffix(move.count))
     stacks[from].removeLast(move.count)
@@ -103,42 +93,35 @@ struct Ship {
 struct Configuration {
   let levels: [Level]
   let moves: [Move]
-
-  init(rawValue: String) throws {
+  init(rawValue: String) {
     let lines = rawValue.components(separatedBy: "\n")
     let components = lines.split(separator: "")
     guard components.count == 2
-    else { throw UnexpectedError.invalidFileComponents }
-
-    levels = try components[0].dropLast().map { line in
-      try Level(rawValue: String(line))
-    }
-
-    moves = try components[1].map { line in
-      try Move(rawValue: String(line))
-    }
+    else { fatalError("unable to split input in levels and moves component: \(components.count) components found") }
+    levels = components[0].dropLast().map { Level(rawValue: String($0)) }
+    moves = components[1].map { Move(rawValue: String($0)) }
   }
 }
 
 func part1() throws -> String {
   let string = try String(contentsOfFile: "05.in")
-  let config = try Configuration(rawValue: string)
+  let config = Configuration(rawValue: string)
   var ship = Ship(levels: config.levels)
   for move in config.moves {
-    try ship.performCrateMover9000(move)
+    ship.performCrateMover9000(move)
   }
   return String(ship.topCrates)
 }
 
 func part2() throws -> String {
   let string = try String(contentsOfFile: "05.in")
-  let config = try Configuration(rawValue: string)
+  let config = Configuration(rawValue: string)
   var ship = Ship(levels: config.levels)
   for move in config.moves {
-    try ship.performCrateMover9001(move)
+    ship.performCrateMover9001(move)
   }
   return String(ship.topCrates)
 }
 
-try await print(part1())
-try await print(part2())
+try print(part1())
+try print(part2())

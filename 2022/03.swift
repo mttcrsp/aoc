@@ -1,24 +1,18 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case invalidCharacter
-  case invalidIntersection
-}
-
 extension Character {
-  func priority() throws -> Int {
+  func priority() -> Int {
     let base: (value: Int, character: Character) =
       isLowercase ? (1, "a") : (27, "A")
     guard let asciiValue, let baseAsciiValue = base.character.asciiValue
-    else { throw UnexpectedError.invalidCharacter }
+    else { fatalError("unexpected character '\(base.character)'") }
     return Int(asciiValue)-Int(baseAsciiValue)+base.value
   }
 }
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "03.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var prioritiesSum = 0
   for try await line in file.bytes.lines {
@@ -26,8 +20,8 @@ func part1() async throws -> Int {
     let compartment2 = Set(line.suffix(line.count/2))
     let intersection = compartment1.intersection(compartment2)
     guard let item = intersection.first, intersection.count == 1
-    else { throw UnexpectedError.invalidIntersection }
-    prioritiesSum += try item.priority()
+    else { fatalError("empty compartments intersection") }
+    prioritiesSum += item.priority()
   }
 
   return prioritiesSum
@@ -35,7 +29,7 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "03.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var groups: [Int: Set<Character>] = [:]
   var index = 0
@@ -54,8 +48,8 @@ func part2() async throws -> Int {
   var prioritiesSum = 0
   for group in groups.values {
     guard let item = group.first, group.count == 1
-    else { throw UnexpectedError.invalidIntersection }
-    prioritiesSum += try item.priority()
+    else { fatalError("unexpected group size \(group.count)") }
+    prioritiesSum += item.priority()
   }
 
   return prioritiesSum

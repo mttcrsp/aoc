@@ -1,9 +1,5 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case malformedLine
-}
-
 func part1() throws -> Int {
   let url = URL(fileURLWithPath: "01.in")
   let string = try String(contentsOf: url)
@@ -18,7 +14,7 @@ func part1() throws -> Int {
     } else if let calories = Int(line) {
       currentElfCalories += calories
     } else {
-      throw UnexpectedError.malformedLine
+      fatalError("malformed line '\(line)'")
     }
   }
 
@@ -41,11 +37,11 @@ func part2() throws -> Int {
     } else if let calories = Int(line) {
       currentElfCalories += calories
     } else {
-      throw UnexpectedError.malformedLine
+      fatalError("malformed line '\(line)'")
     }
   }
   return top3CaloriesElves.reduce(0, +)
 }
 
-try await print(part1())
-try await print(part2())
+try print(part1())
+try print(part2())

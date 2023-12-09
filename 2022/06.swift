@@ -1,11 +1,6 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case markerNotFound
-}
-
-func endIndexForMarker(ofLength length: Int, in string: String) throws -> Int {
+func endIndexForMarker(ofLength length: Int, in string: String) -> Int {
   for index in string.indices.dropFirst(length-1) {
     let lowerBound = string.index(index, offsetBy: -(length-1))
     let upperBound = index
@@ -14,18 +9,18 @@ func endIndexForMarker(ofLength length: Int, in string: String) throws -> Int {
       return string.distance(from: string.startIndex, to: index)+1
     }
   }
-  throw UnexpectedError.markerNotFound
+  fatalError("marker not found")
 }
 
 func part1() throws -> Int {
   let string = try String(contentsOfFile: "06.in")
-  return try endIndexForMarker(ofLength: 4, in: string)
+  return endIndexForMarker(ofLength: 4, in: string)
 }
 
 func part2() throws -> Int {
   let string = try String(contentsOfFile: "06.in")
-  return try endIndexForMarker(ofLength: 14, in: string)
+  return endIndexForMarker(ofLength: 14, in: string)
 }
 
-try await print(part1())
-try await print(part2())
+try print(part1())
+try print(part2())

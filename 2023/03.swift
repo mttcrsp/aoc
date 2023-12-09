@@ -1,11 +1,5 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case invalidNumber
-  case invalidNumberLocation
-}
-
 extension CharacterSet {
   static let dot = CharacterSet(charactersIn: ".")
 }
@@ -52,7 +46,7 @@ struct Engine {
       while !scanner.isAtEnd {
         if let rawNumber = scanner.scanCharacters(from: .decimalDigits) {
           guard let number = Int(rawNumber)
-          else { throw UnexpectedError.invalidNumber }
+          else { fatalError("integer convertion failed for value '\(rawNumber)'") }
           let column = scanner.scanLocation-rawNumber.count
           numberLocations[.init(column, row)] = number
         } else if let character = scanner.scanCharacter() {
@@ -79,7 +73,7 @@ struct Engine {
     return sum
   }
 
-  func gearRatiosSum() throws -> Int {
+  func gearRatiosSum() -> Int {
     var groups: [Location: Set<Location>] = [:]
     for (numberLocation, number) in numberLocations {
       let adjacentLocations = numberLocation.adjacentLocations(
@@ -95,10 +89,10 @@ struct Engine {
     var sum = 0
     for (_, locations) in groups where locations.count == 2 {
       let gear = Array(locations)
-      guard
-        let number1 = numberLocations[gear[0]],
-        let number2 = numberLocations[gear[1]]
-      else { throw UnexpectedError.invalidNumberLocation }
+      guard let number1 = numberLocations[gear[0]]
+      else { fatalError("location not found for gear \(gear[0])") }
+      guard let number2 = numberLocations[gear[1]]
+      else { fatalError("location not found for gear \(gear[1])") }
       sum += number1*number2
     }
 
@@ -108,7 +102,7 @@ struct Engine {
 
 func part1() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "03.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   let engine = try await Engine(file: file)
   return engine.partNumbersSum()
@@ -116,10 +110,10 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let file = FileHandle(forReadingAtPath: "03.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   let engine = try await Engine(file: file)
-  return try engine.gearRatiosSum()
+  return engine.gearRatiosSum()
 }
 
 try await print(part1())

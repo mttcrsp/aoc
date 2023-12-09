@@ -1,19 +1,12 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case malformedMapEntry
-  case missingMapEntry
-  case invalidInstruction
-}
-
 struct Input {
   var instructions: String
   var map: [String: (lhs: String, rhs: String)]
 
   init() async throws {
     guard let file = FileHandle(forReadingAtPath: "08.in")
-    else { throw UnexpectedError.inputNotFound }
+    else { fatalError("input not found") }
 
     instructions = ""
     map = [:]
@@ -29,23 +22,24 @@ struct Input {
         let location = scanner.scanCharacters(from: .uppercaseLetters),
         let lhs = scanner.scanCharacters(from: .uppercaseLetters),
         let rhs = scanner.scanCharacters(from: .uppercaseLetters)
-      else { throw UnexpectedError.malformedMapEntry }
+      else { fatalError("malformed map entry '\(line)'") }
       map[location] = (lhs, rhs)
     }
   }
 
-  func steps(from location: String, to predicate: (String) -> Bool) throws -> Int {
+  func steps(from location: String, to predicate: (String) -> Bool) -> Int {
     var steps = 0
     var location = location
     var index = instructions.startIndex
     while !predicate(location) {
       guard let (lhs, rhs) = map[location]
-      else { throw UnexpectedError.missingMapEntry }
+      else { fatalError("no destinations found for location '\(location)'") }
 
-      switch instructions[index] {
+      let instruction = instructions[index]
+      switch instruction {
       case "L": location = lhs
       case "R": location = rhs
-      default: throw UnexpectedError.invalidInstruction
+      default: fatalError("invalid instruction '\(instruction)'")
       }
 
       steps += 1
@@ -77,14 +71,14 @@ func lcm(_ x: Int, _ y: Int) -> Int {
 
 func part1() async throws -> Int {
   let input = try await Input()
-  return try input.steps(from: "AAA") { $0 == "ZZZ" }
+  return input.steps(from: "AAA") { $0 == "ZZZ" }
 }
 
 func part2() async throws -> Int {
   let input = try await Input()
-  return try input.map.keys
+  return input.map.keys
     .filter { location in location.hasSuffix("A") }
-    .map { location in try input.steps(from: location, to: { location in location.hasSuffix("Z") }) }
+    .map { location in input.steps(from: location, to: { location in location.hasSuffix("Z") }) }
     .reduce(1, lcm)
 }
 

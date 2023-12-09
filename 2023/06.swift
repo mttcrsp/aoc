@@ -1,11 +1,5 @@
 import Foundation
 
-enum UnexpectedError: Error {
-  case inputNotFound
-  case unexpectedLine
-  case malformedInput
-}
-
 struct Race {
   let time: Int
   let distance: Int
@@ -48,7 +42,7 @@ struct Race {
 
 func part1() async throws -> Int {
   guard let fileHandle = FileHandle(forReadingAtPath: "06.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var times: [Int] = []
   var distances: [Int] = []
@@ -63,7 +57,7 @@ func part1() async throws -> Int {
         distances.append(distance)
       }
     } else {
-      throw UnexpectedError.unexpectedLine
+      fatalError("unexpected line '\(line)'")
     }
   }
 
@@ -78,7 +72,7 @@ func part1() async throws -> Int {
 
 func part2() async throws -> Int {
   guard let fileHandle = FileHandle(forReadingAtPath: "06.in")
-  else { throw UnexpectedError.inputNotFound }
+  else { fatalError("input not found") }
 
   var rawTime = ""
   var rawDistance = ""
@@ -93,12 +87,12 @@ func part2() async throws -> Int {
         rawDistance += component
       }
     } else {
-      throw UnexpectedError.unexpectedLine
+      fatalError("unexpected line '\(line)'")
     }
   }
 
   guard let time = Int(rawTime), let distance = Int(rawDistance)
-  else { throw UnexpectedError.unexpectedLine }
+  else { fatalError("malformed time '\(rawTime)' or distance '\(rawDistance)' found") }
 
   let race = Race(time: time, distance: distance)
   return race.sufficientHoldingTimesCount()
