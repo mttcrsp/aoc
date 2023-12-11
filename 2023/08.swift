@@ -53,7 +53,7 @@ struct Input {
   }
 }
 
-func gcd(_ x: Int, _ y: Int) -> Int {
+func greatestCommonDivisor(_ x: Int, _ y: Int) -> Int {
   var a = 0
   var b = max(x, y)
   var r = min(x, y)
@@ -65,8 +65,8 @@ func gcd(_ x: Int, _ y: Int) -> Int {
   return b
 }
 
-func lcm(_ x: Int, _ y: Int) -> Int {
-  return x/gcd(x, y)*y
+func leastCommonMultiple(_ x: Int, _ y: Int) -> Int {
+  return x/greatestCommonDivisor(x, y)*y
 }
 
 func part1() async throws -> Int {
@@ -79,7 +79,7 @@ func part2() async throws -> Int {
   return input.map.keys
     .filter { location in location.hasSuffix("A") }
     .map { location in input.steps(from: location, to: { location in location.hasSuffix("Z") }) }
-    .reduce(1, lcm)
+    .reduce(1, leastCommonMultiple)
 }
 
 try await print(part1())
