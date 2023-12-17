@@ -1,8 +1,7 @@
 import Foundation
 
 func part1() throws -> Int {
-  let url = URL(fileURLWithPath: "01.in")
-  let string = try String(contentsOf: url)
+  let string = try String(contentsOfFile: "01.in")
   let lines = string.components(separatedBy: "\n")
 
   var maxCalories = 0
@@ -22,8 +21,7 @@ func part1() throws -> Int {
 }
 
 func part2() throws -> Int {
-  let url = URL(fileURLWithPath: "01.in")
-  let string = try String(contentsOf: url)
+  let string = try String(contentsOfFile: "01.in")
   let lines = string.components(separatedBy: "\n")
 
   var top3CaloriesElves: [Int] = [0, 0, 0]
