@@ -32,10 +32,6 @@ struct Game {
   var id: Int
   var outcomes: [Outcome]
 
-  static let outcomesCharacterSet =
-    CharacterSet(charactersIn: " ,;")
-      .union(.alphanumerics)
-
   init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     _ = scanner.scanString("Game ")
@@ -52,6 +48,10 @@ struct Game {
     outcomes = rawOutcomes.components(separatedBy: "; ")
       .map(Outcome.init)
   }
+
+  static let outcomesCharacterSet =
+    CharacterSet(charactersIn: " ,;")
+      .union(.alphanumerics)
 
   var isPossible: Bool {
     outcomes.allSatisfy(\.isPossible)
@@ -70,33 +70,18 @@ struct Game {
   }
 }
 
-func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "02.in")
-  else { fatalError("input not found") }
+guard let file = FileHandle(forReadingAtPath: "02.in")
+else { fatalError("input not found") }
 
-  var possibleGamesIDsSum = 0
-  for try await line in file.bytes.lines {
-    let game = Game(rawValue: line)
-    if game.isPossible {
-      possibleGamesIDsSum += game.id
-    }
+var possibleGamesIDsSum = 0
+var gamesPowerSum = 0
+for try await line in file.bytes.lines {
+  let game = Game(rawValue: line)
+  gamesPowerSum += game.power
+  if game.isPossible {
+    possibleGamesIDsSum += game.id
   }
-
-  return possibleGamesIDsSum
 }
 
-func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "02.in")
-  else { fatalError("input not found") }
-
-  var gamesPowerSum = 0
-  for try await line in file.bytes.lines {
-    let game = Game(rawValue: line)
-    gamesPowerSum += game.power
-  }
-
-  return gamesPowerSum
-}
-
-try await print(part1())
-try await print(part2())
+print(possibleGamesIDsSum)
+print(gamesPowerSum)

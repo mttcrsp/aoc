@@ -5,14 +5,14 @@ struct RangeConverter {
   let dstLowerBound: Int
   let count: Int
 
-  init(line: String) {
-    let components = line.components(separatedBy: " ")
+  init(rawValue: String) {
+    let components = rawValue.components(separatedBy: " ")
     guard
       components.count == 3,
       let dstLowerBound = Int(components[0]),
       let srcLowerBound = Int(components[1]),
       let count = Int(components[2])
-    else { fatalError("malformed range converter definition '\(line)'") }
+    else { fatalError("malformed range converter definition '\(rawValue)'") }
     self.srcLowerBound = srcLowerBound
     self.dstLowerBound = dstLowerBound
     self.count = count

@@ -69,18 +69,11 @@ func leastCommonMultiple(_ x: Int, _ y: Int) -> Int {
   return x/greatestCommonDivisor(x, y)*y
 }
 
-func part1() async throws -> Int {
-  let input = try await Input()
-  return input.steps(from: "AAA") { $0 == "ZZZ" }
-}
-
-func part2() async throws -> Int {
-  let input = try await Input()
-  return input.map.keys
-    .filter { location in location.hasSuffix("A") }
-    .map { location in input.steps(from: location, to: { location in location.hasSuffix("Z") }) }
-    .reduce(1, leastCommonMultiple)
-}
-
-try await print(part1())
-try await print(part2())
+let input = try await Input()
+let part1 = input.steps(from: "AAA") { $0 == "ZZZ" }
+let part2 = input.map.keys
+  .filter { location in location.hasSuffix("A") }
+  .map { location in input.steps(from: location, to: { location in location.hasSuffix("Z") }) }
+  .reduce(1, leastCommonMultiple)
+print(part1)
+print(part2)

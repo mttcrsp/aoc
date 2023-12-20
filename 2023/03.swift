@@ -1,15 +1,5 @@
 import Foundation
 
-extension CharacterSet {
-  static let dot = CharacterSet(charactersIn: ".")
-}
-
-extension BinaryInteger {
-  var numberOfDigits: Int {
-    self == 0 ? 1 : Int(log10(Double(self)))+1
-  }
-}
-
 struct Location: Hashable {
   let x, y: Int
   init(_ x: Int, _ y: Int) {
@@ -100,21 +90,19 @@ struct Engine {
   }
 }
 
-func part1() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "03.in")
-  else { fatalError("input not found") }
-
-  let engine = try await Engine(file: file)
-  return engine.partNumbersSum()
+extension CharacterSet {
+  static let dot = CharacterSet(charactersIn: ".")
 }
 
-func part2() async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "03.in")
-  else { fatalError("input not found") }
-
-  let engine = try await Engine(file: file)
-  return engine.gearRatiosSum()
+extension BinaryInteger {
+  var numberOfDigits: Int {
+    self == 0 ? 1 : Int(log10(Double(self)))+1
+  }
 }
 
-try await print(part1())
-try await print(part2())
+guard let file = FileHandle(forReadingAtPath: "03.in")
+else { fatalError("input not found") }
+
+let engine = try await Engine(file: file)
+print(engine.partNumbersSum())
+print(engine.gearRatiosSum())
