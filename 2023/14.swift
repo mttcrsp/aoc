@@ -6,10 +6,6 @@ enum Rock: Character {
   case cube = "#"
 }
 
-extension Rock: CustomStringConvertible {
-  var description: String { String(rawValue) }
-}
-
 enum Direction: CaseIterable {
   case north, west, south, east
 

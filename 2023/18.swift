@@ -2,19 +2,32 @@ import Foundation
 
 enum Direction: CaseIterable {
   case up, down, left, right
-}
 
-struct Command {
-  let direction: Direction
-  let steps: Int
+  init?(alphabeticalCode: Character) {
+    switch alphabeticalCode {
+    case "R": self = .right
+    case "D": self = .down
+    case "L": self = .left
+    case "U": self = .up
+    default: return nil
+    }
+  }
+
+  init?(colorCode: Character) {
+    switch colorCode {
+    case "0": self = .right
+    case "1": self = .down
+    case "2": self = .left
+    case "3": self = .up
+    default: return nil
+    }
+  }
 }
 
 struct Entry {
   let mainCommand: Command
   let colorCommand: Command
-}
 
-extension Entry {
   init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
     guard
@@ -44,26 +57,9 @@ extension Entry {
   }
 }
 
-extension Direction {
-  init?(alphabeticalCode: Character) {
-    switch alphabeticalCode {
-    case "R": self = .right
-    case "D": self = .down
-    case "L": self = .left
-    case "U": self = .up
-    default: return nil
-    }
-  }
-
-  init?(colorCode: Character) {
-    switch colorCode {
-    case "0": self = .right
-    case "1": self = .down
-    case "2": self = .left
-    case "3": self = .up
-    default: return nil
-    }
-  }
+struct Command {
+  let direction: Direction
+  let steps: Int
 }
 
 func cubicMeters(for commands: [Command]) -> Int {

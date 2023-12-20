@@ -1,12 +1,8 @@
 import Foundation
 
-guard let file = FileHandle(forReadingAtPath: "10.in")
-else { fatalError("input not found") }
-
 struct Position: Hashable {
   let x: Int
   let y: Int
-
   init(_ x: Int, _ y: Int) {
     self.x = x
     self.y = y
@@ -59,31 +55,6 @@ struct Position: Hashable {
   }
 }
 
-var characters: [[Character]] = []
-for try await line in file.bytes.lines {
-  characters.append(Array(line))
-}
-
-var startingPosition: Position?
-for y in 0 ..< characters.count {
-  for x in 0 ..< characters[y].count {
-    let symbol = characters[y][x]
-    switch symbol {
-    case "S": startingPosition = .init(x, y)
-    case "L": characters[y][x] = "└"
-    case "J": characters[y][x] = "┘"
-    case "7": characters[y][x] = "┐"
-    case "F": characters[y][x] = "┌"
-    case "|", "-", ".": continue
-    default: fatalError("unknown symbol: \(symbol)")
-    }
-  }
-}
-
-guard let startingPosition else {
-  fatalError("starting position not found")
-}
-
 struct Path {
   var values: [Position]
   var visited: Set<Position>
@@ -124,6 +95,34 @@ func findLoop(from startingPosition: Position) -> Path? {
     paths = newPaths
   }
   return nil
+}
+
+guard let file = FileHandle(forReadingAtPath: "10.in")
+else { fatalError("input not found") }
+
+var characters: [[Character]] = []
+for try await line in file.bytes.lines {
+  characters.append(Array(line))
+}
+
+var startingPosition: Position?
+for y in 0 ..< characters.count {
+  for x in 0 ..< characters[y].count {
+    let symbol = characters[y][x]
+    switch symbol {
+    case "S": startingPosition = .init(x, y)
+    case "L": characters[y][x] = "└"
+    case "J": characters[y][x] = "┘"
+    case "7": characters[y][x] = "┐"
+    case "F": characters[y][x] = "┌"
+    case "|", "-", ".": continue
+    default: fatalError("unknown symbol: \(symbol)")
+    }
+  }
+}
+
+guard let startingPosition else {
+  fatalError("starting position not found")
 }
 
 guard let loop = findLoop(from: startingPosition) else {

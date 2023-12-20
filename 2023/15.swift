@@ -17,9 +17,7 @@ extension String {
 struct InsertStep {
   let label: String
   let focalLength: Int
-}
 
-extension InsertStep {
   init?(rawValue: String) {
     let components = rawValue.components(separatedBy: "=")
     guard components.count == 2, let focalLength = Int(components[1])
@@ -31,9 +29,7 @@ extension InsertStep {
 
 struct RemoveStep {
   let label: String
-}
 
-extension RemoveStep {
   init?(rawValue: String) {
     guard rawValue.hasSuffix("-") else { return nil }
     label = String(rawValue.dropLast())

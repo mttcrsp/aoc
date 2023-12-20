@@ -6,6 +6,19 @@ enum Turn: CaseIterable {
 
 enum Direction: Hashable {
   case up, down, left, right
+
+  func turn(_ turn: Turn) -> Direction {
+    switch (self, turn) {
+    case (.up, .left): return .left
+    case (.up, .right): return .right
+    case (.down, .left): return .right
+    case (.down, .right): return .left
+    case (.left, .left): return .down
+    case (.left, .right): return .up
+    case (.right, .left): return .up
+    case (.right, .right): return .down
+    }
+  }
 }
 
 struct Point: Hashable {
@@ -15,17 +28,24 @@ struct Point: Hashable {
     self.x = x
     self.y = y
   }
-}
 
-struct VisitedItem: Hashable {
-  var position: Point
-  var direction: Direction
+  func moved(_ direction: Direction, offset: Int) -> Point {
+    switch direction {
+    case .up: return .init(x, y-offset)
+    case .down: return .init(x, y+offset)
+    case .left: return .init(x-offset, y)
+    case .right: return .init(x+offset, y)
+    }
+  }
 }
 
 struct HeapItem {
   var totalHeatLoss: Int
   var position: Point
   var direction: Direction
+  var visit: VisitedItem {
+    .init(position: position, direction: direction)
+  }
 }
 
 class Heap {
@@ -79,36 +99,9 @@ extension Grid {
   }
 }
 
-extension HeapItem {
-  var visit: VisitedItem {
-    .init(position: position, direction: direction)
-  }
-}
-
-extension Direction {
-  func turn(_ turn: Turn) -> Direction {
-    switch (self, turn) {
-    case (.up, .left): return .left
-    case (.up, .right): return .right
-    case (.down, .left): return .right
-    case (.down, .right): return .left
-    case (.left, .left): return .down
-    case (.left, .right): return .up
-    case (.right, .left): return .up
-    case (.right, .right): return .down
-    }
-  }
-}
-
-extension Point {
-  func moved(_ direction: Direction, offset: Int) -> Point {
-    switch direction {
-    case .up: return .init(x, y-offset)
-    case .down: return .init(x, y+offset)
-    case .left: return .init(x-offset, y)
-    case .right: return .init(x+offset, y)
-    }
-  }
+struct VisitedItem: Hashable {
+  var position: Point
+  var direction: Direction
 }
 
 guard let file = FileHandle(forReadingAtPath: "17.in")

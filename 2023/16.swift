@@ -1,9 +1,5 @@
 import Foundation
 
-enum Direction: Hashable {
-  case up, down, left, right
-}
-
 struct Point: Hashable {
   var x: Int
   var y: Int
@@ -13,12 +9,50 @@ struct Point: Hashable {
   }
 }
 
+enum Direction: Hashable {
+  case up, down, left, right
+
+  func matches(_ splitter: Splitter) -> Bool {
+    switch (self, splitter) {
+    case (.up, .vertical): true
+    case (.down, .vertical): true
+    case (.left, .horizontal): true
+    case (.right, .horizontal): true
+    default: false
+    }
+  }
+
+  func reflected(by mirror: Mirror) -> Direction {
+    switch (mirror, self) {
+    case (.backslash, .up): .left
+    case (.backslash, .down): .right
+    case (.backslash, .left): .up
+    case (.backslash, .right): .down
+    case (.forwardSlash, .up): .right
+    case (.forwardSlash, .down): .left
+    case (.forwardSlash, .left): .down
+    case (.forwardSlash, .right): .up
+    }
+  }
+
+  func interact(with item: Item) -> [Direction] {
+    switch item {
+    case .empty:
+      [self]
+    case let .splitter(splitter) where matches(splitter):
+      [self]
+    case let .splitter(splitter):
+      splitter.directions
+    case let .mirror(mirror):
+      [reflected(by: mirror)]
+    }
+  }
+}
+
 struct Beam: Hashable {
   var point: Point
   var direction: Direction
-}
 
-extension Beam {
   static let initial =
     Self(point: .init(0, 0), direction: .right)
 
@@ -40,9 +74,7 @@ enum Mirror: Character {
 enum Splitter: Character {
   case vertical = "|"
   case horizontal = "-"
-}
 
-extension Splitter {
   var directions: [Direction] {
     switch self {
     case .vertical: return [.up, .down]
@@ -55,9 +87,7 @@ enum Item {
   case empty
   case mirror(Mirror)
   case splitter(Splitter)
-}
 
-extension Item {
   init?(rawValue: Character) {
     if rawValue == "." {
       self = .empty
@@ -95,44 +125,6 @@ extension Grid {
       beams.append(.init(point: .init(x, count-1), direction: .up))
     }
     return beams
-  }
-}
-
-extension Direction {
-  func matches(_ splitter: Splitter) -> Bool {
-    switch (self, splitter) {
-    case (.up, .vertical): true
-    case (.down, .vertical): true
-    case (.left, .horizontal): true
-    case (.right, .horizontal): true
-    default: false
-    }
-  }
-
-  func reflected(by mirror: Mirror) -> Direction {
-    switch (mirror, self) {
-    case (.backslash, .up): .left
-    case (.backslash, .down): .right
-    case (.backslash, .left): .up
-    case (.backslash, .right): .down
-    case (.forwardSlash, .up): .right
-    case (.forwardSlash, .down): .left
-    case (.forwardSlash, .left): .down
-    case (.forwardSlash, .right): .up
-    }
-  }
-
-  func interact(with item: Item) -> [Direction] {
-    switch item {
-    case .empty:
-      [self]
-    case let .splitter(splitter) where matches(splitter):
-      [self]
-    case let .splitter(splitter):
-      splitter.directions
-    case let .mirror(mirror):
-      [reflected(by: mirror)]
-    }
   }
 }
 

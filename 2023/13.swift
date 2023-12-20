@@ -2,9 +2,7 @@ import Foundation
 
 struct Pattern {
   let rows: [[Character]]
-}
 
-extension Pattern {
   init(rawValue: String) {
     rows = rawValue.components(separatedBy: "\n").map(Array.init)
   }

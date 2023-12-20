@@ -9,9 +9,7 @@ enum SpringState: String {
 struct Row {
   var springs: [SpringState]
   var damaged: [Int]
-}
 
-extension Row {
   init(rawValue: String) {
     let components = rawValue.components(separatedBy: " ")
     guard components.count == 2 else { fatalError("malformed springs row '\(rawValue)'") }
