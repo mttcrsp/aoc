@@ -104,24 +104,18 @@ struct CompositeConverter {
   }
 }
 
-func part1() throws -> Int {
-  let string = try String(contentsOfFile: "05.in")
-  let blocks = string.components(separatedBy: "\n\n")
-  let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
-  let converter = CompositeConverter(blocks: Array(blocks[1...]))
-  return seeds.map(converter.convert).min() ?? .max
-}
+let string = try String(contentsOfFile: "05.in")
+let blocks = string.components(separatedBy: "\n\n")
+let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
+let converter = CompositeConverter(blocks: Array(blocks[1...]))
 
-func part2() throws -> Int {
-  let string = try String(contentsOfFile: "05.in")
-  let blocks = string.components(separatedBy: "\n\n")
-  let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
-  let converter = CompositeConverter(blocks: Array(blocks[1...]))
-  let seedRanges = stride(from: 0, to: seeds.count, by: 2).map { i in
-    seeds[i] ..< seeds[i]+seeds[i+1]
-  }
-  return converter.convert(seedRanges).map(\.lowerBound).min() ?? .max
-}
+guard let lowestLocationNumber1 = seeds.map(converter.convert).min()
+else { fatalError() }
+print(lowestLocationNumber1)
 
-try print(part1())
-try print(part2())
+let seedRanges = stride(from: 0, to: seeds.count, by: 2)
+  .map { i in seeds[i] ..< seeds[i]+seeds[i+1] }
+
+guard let lowestLocationNumber2 = converter.convert(seedRanges).map(\.lowerBound).min()
+else { fatalError() }
+print(lowestLocationNumber2)

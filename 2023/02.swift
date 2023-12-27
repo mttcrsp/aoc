@@ -6,15 +6,14 @@ struct Outcome {
   var b = 0
 
   init(rawValue: String) {
-    for component in rawValue.components(separatedBy: ", ") {
-      let scanner = Scanner(string: component)
+    let scanner = Scanner(string: rawValue)
+    scanner.charactersToBeSkipped = CharacterSet(charactersIn: " ,")
 
+    while !scanner.isAtEnd {
       guard let count = scanner.scanInt()
       else { fatalError("cubes count not found in '\(rawValue)'") }
 
-      _ = scanner.scanString(" ")
-
-      switch scanner.scanCharacters(from: .alphanumerics) {
+      switch scanner.scanCharacters(from: .lowercaseLetters) {
       case "red": r = count
       case "green": g = count
       case "blue": b = count
@@ -34,24 +33,18 @@ struct Game {
 
   init(rawValue: String) {
     let scanner = Scanner(string: rawValue)
-    _ = scanner.scanString("Game ")
 
-    guard let id = scanner.scanInt()
+    guard 
+      let _ = scanner.scanString("Game "),
+      let id = scanner.scanInt(),
+      let _ = scanner.scanString(": ")
     else { fatalError("id not found in '\(rawValue)'") }
     self.id = id
 
-    _ = scanner.scanString(": ")
-
-    guard let rawOutcomes = scanner.scanCharacters(from: Self.outcomesCharacterSet)
-    else { fatalError("outcomes not found in '\(rawValue)'") }
-
-    outcomes = rawOutcomes.components(separatedBy: "; ")
+    outcomes = scanner.string[scanner.currentIndex...]
+      .components(separatedBy: "; ")
       .map(Outcome.init)
   }
-
-  static let outcomesCharacterSet =
-    CharacterSet(charactersIn: " ,;")
-      .union(.alphanumerics)
 
   var isPossible: Bool {
     outcomes.allSatisfy(\.isPossible)

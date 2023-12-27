@@ -1,5 +1,54 @@
 import Foundation
 
+extension [Race] {
+  init(rawValue: String) {
+    self.init()
+
+    let scanner = Scanner(string: rawValue)
+    scanner.charactersToBeSkipped = .whitespacesAndNewlines
+
+    _ = scanner.scanString("Time:")
+    var times: [Int] = []
+    while let time = scanner.scanInt() {
+      times.append(time)
+    }
+
+    _ = scanner.scanString("Distance:")
+    var distances: [Int] = []
+    while let distance = scanner.scanInt() {
+      distances.append(distance)
+    }
+
+    for (time, distance) in zip(times, distances) {
+      append(Race(time: time, distance: distance))
+    }
+  }
+}
+
+extension Race {
+  init(rawValue: String) {
+    let scanner = Scanner(string: rawValue)
+    scanner.charactersToBeSkipped = .whitespacesAndNewlines
+
+    _ = scanner.scanString("Time:")
+    var rawTime = ""
+    while let component = scanner.scanCharacters(from: .decimalDigits) {
+      rawTime += component
+    }
+
+    _ = scanner.scanString("Distance:")
+    var rawDistance = ""
+    while let component = scanner.scanCharacters(from: .decimalDigits) {
+      rawDistance += component
+    }
+
+    guard let time = Int(rawTime), let distance = Int(rawDistance)
+    else { fatalError("failed to convert '\(rawTime)' or '\(rawDistance)' to Int") }
+    self.time = time
+    self.distance = distance
+  }
+}
+
 struct Race {
   let time: Int
   let distance: Int
@@ -40,44 +89,9 @@ struct Race {
   }
 }
 
-guard let file = FileHandle(forReadingAtPath: "06.in")
-else { fatalError("input not found") }
+let string = try String(contentsOfFile: "06.in")
+let races = [Race](rawValue: string)
+print(races.map { $0.sufficientHoldingTimesCount() }.reduce(1, *))
 
-var times: [Int] = []
-var rawTime = ""
-var distances: [Int] = []
-var rawDistance = ""
-for try await line in file.bytes.lines {
-  let scanner = Scanner(string: line)
-  if let _ = scanner.scanString("Time: ") {
-    while let component = scanner.scanCharacters(from: .decimalDigits) {
-      rawTime += component
-      guard let time = Int(component)
-      else { fatalError("malformed time component '\(component)'") }
-      times.append(time)
-    }
-  } else if let _ = scanner.scanString("Distance: ") {
-    while let component = scanner.scanCharacters(from: .decimalDigits) {
-      rawDistance += component
-      guard let distance = Int(component)
-      else { fatalError("malformed distance component '\(component)'") }
-      distances.append(distance)
-    }
-  } else {
-    fatalError("unexpected line '\(line)'")
-  }
-}
-
-var part1 = 1
-for (time, distance) in zip(times, distances) {
-  let race = Race(time: time, distance: distance)
-  part1 *= race.sufficientHoldingTimesCount()
-}
-
-guard let time = Int(rawTime), let distance = Int(rawDistance)
-else { fatalError("malformed time '\(rawTime)' or distance '\(rawDistance)' found") }
-let race = Race(time: time, distance: distance)
-let part2 = race.sufficientHoldingTimesCount()
-
-print(part1)
-print(part2)
+let race = Race(rawValue: string)
+print(race.sufficientHoldingTimesCount())

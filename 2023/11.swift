@@ -4,11 +4,6 @@ struct Location: Hashable, Comparable {
   let x: Int
   let y: Int
 
-  init(_ x: Int, _ y: Int) {
-    self.x = x
-    self.y = y
-  }
-
   func distance(to other: Location) -> Int {
     abs(other.x-x)+abs(other.y-y)
   }
@@ -18,44 +13,44 @@ struct Location: Hashable, Comparable {
   }
 }
 
-func distancesSum(withExpansionFactor expansionFactor: Int) async throws -> Int {
-  guard let file = FileHandle(forReadingAtPath: "11.in")
-  else { fatalError("input not found") }
+guard let file = FileHandle(forReadingAtPath: "11.in")
+else { fatalError("input not found") }
 
-  var original: [[Character]] = []
-  for try await line in file.bytes.lines {
-    original.append(Array(line))
+var original: [[Character]] = []
+for try await line in file.bytes.lines {
+  original.append(Array(line))
+}
+
+var emptyRowsIndices: Set<Int> = []
+for index in original.indices {
+  if original[index].allSatisfy({ $0 == "." }) {
+    emptyRowsIndices.insert(index)
   }
+}
 
-  var emptyRowsIndices: Set<Int> = []
-  for index in original.indices {
-    if original[index].allSatisfy({ $0 == "." }) {
-      emptyRowsIndices.insert(index)
+var emptyColsIndices: Set<Int> = []
+for i in original.indices {
+  var column: [Character] = []
+  for j in original[i].indices {
+    column.append(original[j][i])
+  }
+  if column.allSatisfy({ $0 == "." }) {
+    emptyColsIndices.insert(i)
+  }
+}
+
+var galaxies: Set<Location> = []
+for row in original.indices {
+  for col in original[row].indices {
+    if original[row][col] == "#" {
+      galaxies.insert(.init(x: col, y: row))
     }
   }
+}
 
-  var emptyColsIndices: Set<Int> = []
-  for i in original.indices {
-    var column: [Character] = []
-    for j in original[i].indices {
-      column.append(original[j][i])
-    }
-    if column.allSatisfy({ $0 == "." }) {
-      emptyColsIndices.insert(i)
-    }
-  }
+let sortedGalaxies = galaxies.sorted()
 
-  var galaxies: Set<Location> = []
-  for row in original.indices {
-    for col in original[row].indices {
-      if original[row][col] == "#" {
-        galaxies.insert(.init(col, row))
-      }
-    }
-  }
-
-  let sortedGalaxies = galaxies.sorted()
-
+func distancesSum(withExpansionFactor expansionFactor: Int) -> Int {
   var sum = 0
   for (i, galaxy) in sortedGalaxies.enumerated() {
     for (j, otherGalaxy) in sortedGalaxies.enumerated() {
@@ -77,13 +72,5 @@ func distancesSum(withExpansionFactor expansionFactor: Int) async throws -> Int 
   return sum
 }
 
-func part1() async throws -> Int {
-  try await distancesSum(withExpansionFactor: 2)
-}
-
-func part2() async throws -> Int {
-  try await distancesSum(withExpansionFactor: 1_000_000)
-}
-
-try await print(part1())
-try await print(part2())
+print(distancesSum(withExpansionFactor: 2))
+print(distancesSum(withExpansionFactor: 1_000_000))
