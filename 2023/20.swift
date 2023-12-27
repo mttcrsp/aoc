@@ -1,7 +1,7 @@
 import Foundation
 
 enum Pulse {
-  case high, low
+  case hi, lo
 }
 
 enum ModuleType {
@@ -46,15 +46,15 @@ class Module {
     switch moduleType {
     case .flipFlop:
       switch pulse {
-      case .high:
+      case .hi:
         return nil
-      case .low:
+      case .lo:
         defer { isOn.toggle() }
-        return isOn ? .low : .high
+        return isOn ? .lo : .hi
       }
     case .conjunction:
       memory[previousID] = pulse
-      return memory.values.allSatisfy { $0 == .high } ? .low : .high
+      return memory.values.allSatisfy { $0 == .hi } ? .lo : .hi
     case .broadcaster:
       return pulse
     }
@@ -70,24 +70,49 @@ for try await line in file.bytes.lines {
   modules[module.id] = module
 }
 
-for (sourceID, module) in modules {
-  for destinationID in module.destinationIDs {
-    if case .conjunction = modules[destinationID]?.moduleType {
-      module.memory[sourceID] = .low
+for (sourceID, sourceModule) in modules {
+  for destinationID in sourceModule.destinationIDs {
+    if let destinationModule = modules[destinationID] {
+      if case .conjunction = destinationModule.moduleType {
+        destinationModule.memory[sourceID] = .lo
+      }
     }
   }
 }
 
-var highCount = 0
-var lowCount = 0
-for _ in 1 ... 1000 {
-  var queue: [(String, String, Pulse)] = [("button", "broadcaster", .low)]
+var rxConjunction: Module?
+for (_, sourceModule) in modules {
+  for destinationID in sourceModule.destinationIDs {
+    if destinationID == "rx", case .conjunction = sourceModule.moduleType {
+      rxConjunction = sourceModule
+    }
+  }
+}
+
+guard let rxConjunction
+else { fatalError("rx source conjunction module not found") }
+
+var hiCount = 0
+var loCount = 0
+var rxSourcesActivations: [String: Int] = [:]
+var buttonPressesCount = 0
+while true {
+  if buttonPressesCount == 1000 {
+    print(hiCount*loCount)
+  } else if rxSourcesActivations.count == rxConjunction.memory.count {
+    print(rxSourcesActivations.values.reduce(1, *))
+    break
+  }
+
+  buttonPressesCount += 1
+
+  var queue: [(String, String, Pulse)] = [("button", "broadcaster", .lo)]
   while !queue.isEmpty {
     let (previousID, id, pulse) = queue.removeFirst()
 
     switch pulse {
-    case .high: highCount += 1
-    case .low: lowCount += 1
+    case .hi: hiCount += 1
+    case .lo: loCount += 1
     }
 
     if let module = modules[id] {
@@ -96,9 +121,12 @@ for _ in 1 ... 1000 {
           queue.append((id, destinationID, pulse))
         }
       }
+
+      if module === rxConjunction {
+        for (id, pulse) in module.memory where pulse == .hi {
+          rxSourcesActivations[id] = buttonPressesCount
+        }
+      }
     }
   }
 }
-
-let result = highCount*lowCount
-print(result)
