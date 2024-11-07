@@ -137,7 +137,7 @@ enum Outcome: Equatable {
   }
 }
 
-let string = try String(contentsOfFile: "19.in")
+let string = try String(contentsOfFile: "19.in", encoding: .utf8)
 let components = string.components(separatedBy: "\n\n")
 guard components.count == 2 else { fatalError("malformed input") }
 

@@ -67,7 +67,7 @@ func mirrorLocation(in elements: [[Character]]) -> Int? {
   return nil
 }
 
-let input = try String(contentsOfFile: "13.in")
+let input = try String(contentsOfFile: "13.in", encoding: .utf8)
 let patterns = input.components(separatedBy: "\n\n").map(Pattern.init)
 
 var rowsSum = 0

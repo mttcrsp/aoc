@@ -89,7 +89,7 @@ struct Race {
   }
 }
 
-let string = try String(contentsOfFile: "06.in")
+let string = try String(contentsOfFile: "06.in", encoding: .utf8)
 let races = [Race](rawValue: string)
 print(races.map { $0.sufficientHoldingTimesCount() }.reduce(1, *))
 

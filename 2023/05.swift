@@ -104,7 +104,7 @@ struct CompositeConverter {
   }
 }
 
-let string = try String(contentsOfFile: "05.in")
+let string = try String(contentsOfFile: "05.in", encoding: .utf8)
 let blocks = string.components(separatedBy: "\n\n")
 let seeds = blocks[0].components(separatedBy: " ").compactMap(Int.init)
 let converter = CompositeConverter(blocks: Array(blocks[1...]))

@@ -13,12 +13,12 @@ func endIndexForMarker(ofLength length: Int, in string: String) -> Int {
 }
 
 func part1() throws -> Int {
-  let string = try String(contentsOfFile: "06.in")
+  let string = try String(contentsOfFile: "06.in", encoding: .utf8)
   return endIndexForMarker(ofLength: 4, in: string)
 }
 
 func part2() throws -> Int {
-  let string = try String(contentsOfFile: "06.in")
+  let string = try String(contentsOfFile: "06.in", encoding: .utf8)
   return endIndexForMarker(ofLength: 14, in: string)
 }
 

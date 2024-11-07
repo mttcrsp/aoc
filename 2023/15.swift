@@ -41,7 +41,7 @@ struct Slot {
   var focalLength: Int
 }
 
-let string = try String(contentsOfFile: "15.in")
+let string = try String(contentsOfFile: "15.in", encoding: .utf8)
 let steps = string.components(separatedBy: ",")
 var sum = 0
 var boxes: [Int: [Slot]] = [:]
