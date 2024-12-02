@@ -1,8 +1,7 @@
 import Foundation
 
-guard let file = FileHandle(forReadingAtPath: "Sources/Resources/ex")
+guard let input = try? String(contentsOfFile: "Sources/Resources/ex", encoding: .utf8)
 else { fatalError("input not found") }
 
-for try await line in file.bytes.lines {
-  print(line)
-}
+let lines = input.components(separatedBy: "\n")
+print(lines)
