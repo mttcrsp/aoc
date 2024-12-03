@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "AdventOfCode",
-  platforms: [.macOS(.v12)],
+  platforms: [.macOS(.v13)],
   dependencies: [
     .package(url: "https://github.com/apple/swift-collections.git", from: .init(1, 1, 4)),
   ],
