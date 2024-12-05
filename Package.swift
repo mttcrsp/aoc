@@ -11,8 +11,7 @@ let package = Package(
   targets: [
     .executableTarget(
       name: "aoc",
-      dependencies: [.product(name: "Collections", package: "swift-collections")],
-      resources: [.copy("Resources")]
+      dependencies: [.product(name: "Collections", package: "swift-collections")]
     ),
   ]
 )
