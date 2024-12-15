@@ -1,3 +1,5 @@
+import Algorithms
+import Collections
 import Foundation
 
 let args = ProcessInfo.processInfo.arguments
