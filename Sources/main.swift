@@ -29,6 +29,19 @@ struct Point: Hashable {
   }
 }
 
+extension Point: CustomDebugStringConvertible {
+  var debugDescription: String {
+    "(\(row),\(col))"
+  }
+}
+
+extension Point: Comparable {
+  static func < (_ lhs: Self, _ rhs: Self) -> Bool {
+    guard lhs.row == rhs.row else { return lhs.row < rhs.row }
+    return lhs.col < rhs.col
+  }
+}
+
 extension [[Character]] {
   var rowsCount: Int { count }
   var colsCount: Int { self[0].count }
